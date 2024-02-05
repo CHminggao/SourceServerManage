@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "sourceserver",
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "tauri": {
     "allowlist": {
@@ -46,14 +46,22 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "nsis":{
+          "installerIcon":"./icons/icon.ico",
+          "languages":["SimpChinese"],
+          "license":"../LICENSE"
+        }
+
       }
     },
     "security": {
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": ["https://github.com/CHminggao/SourceServerManage/releases/latest/download/version.json"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhDRjJBMUQxODE4OEY4NQpSV1NGanhnWUhTclBDTVY0QUZncGl0cGtCSmpnMis5REFSRGNzMThoSTZFVy9UQ21hb1czSWt0Tgo="
     },
     "windows": [
       {
