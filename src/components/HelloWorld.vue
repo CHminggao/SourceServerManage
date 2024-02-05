@@ -45,17 +45,32 @@ const colums = [
   }, {
     title: '操作',
     render(row: ServerInfo) {
-      return h(
-        NButton,
-        {
-          strong: true,
-          tertiary: true,
-          type: "primary",
-          size: 'small',
-          onClick: () => start(row)
-        },
-        { default: () => '加入' }
-      )
+      return h('div', { style: "width: 100px;display: flex;width: 100px;justify-content: space-between;" }, [
+        h(
+          NButton,
+          {
+            strong: true,
+            tertiary: true,
+            secondary: true,
+            type: "primary",
+            size: 'small',
+            onClick: () => start(row)
+          },
+          { default: () => '加入' }
+        ),
+        h(
+          NButton,
+          {
+            strong: true,
+            tertiary: true,
+            secondary: true,
+            type: "error",
+            size: 'small',
+            onClick: () => delServer(row)
+          },
+          { default: () => '删除' }
+        )
+      ])
     }
   }
 ]
@@ -63,12 +78,31 @@ let tempData: ServerInfo[] = [];
 const rowData = ref(tempData)
 
 const start = (server: ServerInfo) => {
-  autoInActive.value=false
+  autoInActive.value = false
   if (server.players > server.incount)
     watingStart(server)
   else
     gotoServer(server.ip + ":" + server.port)
 }
+
+const delServer = (row: ServerInfo) => {
+  invoke('read_server').then((_) => {
+    let server: ServerFileType[] = JSON.parse(<string>_)
+    server = server.filter(s => {
+      if (s.ip === row.ip && s.port?.toString() === row.port) {
+        if (s.incount?.toString() === row.incount.toString()) {
+          return false
+        }
+      }
+      return true
+    });
+    invoke('write_server', { jsonString: JSON.stringify(server) }).then((_) => { }).finally(() => {
+      message.success('删除成功')
+      getAllData()
+    })
+  })
+}
+
 const gotoServer = (com: string) => {
   invoke('start_game', { server: "steam://connect/" + com }).then(() => { })
 }
@@ -123,7 +157,7 @@ const watingStart = (server: ServerInfo) => {
 
 const updateData = (data: ServerInfo[]) => {
   rowData.value = data
-  if (!warningState&&jkActive.value && configInput.value.length > 0 && data.filter(s => configInput.value.includes(s.map)).length > 0) {
+  if (!warningState && jkActive.value && configInput.value.length > 0 && data.filter(s => configInput.value.includes(s.map)).length > 0) {
     let d = data.filter(s => configInput.value.includes(s.map)).sort((a, b) => b.players - a.players)
     jkRowData.value = d
     jkModal.value = true
@@ -283,7 +317,6 @@ const handleValidateButtonClick = (e: MouseEvent) => {
   })
 }
 
-
 onMounted(() => {
   invoke('read_from_config_file').then((_) => {
     configInput.value = JSON.parse(<string>_)
@@ -366,12 +399,12 @@ onMounted(() => {
           <n-input v-model:value="modelRef.port" @keydown.enter.prevent />
         </n-form-item>
         <n-form-item path="incount" label="最大人数">
-          <n-input v-model:value="modelRef.incount" :disabled="!modelRef.incount" @keydown.enter.prevent />
+          <n-input v-model:value="modelRef.incount" @keydown.enter.prevent />
         </n-form-item>
         <n-row :gutter="[0, 24]">
           <n-col :span="24">
             <div style="display: flex; justify-content: flex-end">
-              <n-button :disabled="modelRef.ip === null" round type="primary" @click="handleValidateButtonClick">
+              <n-button round type="primary" @click="handleValidateButtonClick">
                 添加
               </n-button>
             </div>
