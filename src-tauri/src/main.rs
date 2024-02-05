@@ -16,7 +16,9 @@ fn main() {
             server_all,
             start_game,
             write_config_file,
-            read_from_config_file
+            read_from_config_file,
+            read_server,
+            write_server
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -133,16 +135,54 @@ fn read_from_config_file() -> String {
 
 #[tauri::command]
 fn write_config_file(json_string: String) -> String {
-    let content: String = "".to_string();
+    let mut content: String = "".to_string();
     match File::create(CONFIG_PATH) {
         Ok(mut f) => match f.write_all(json_string.as_bytes()) {
             Ok(_) => {}
             Err(_) => {
-                println!("写入失败");
+                content ="写入失败".to_string();
             }
         },
         Err(_) => {
-            println!("写入失败");
+            content ="写入失败".to_string();
+        }
+    }
+    return content;
+}
+
+#[tauri::command]
+fn read_server()-> String{
+    // 尝试以只读方式打开文件
+    let mut file = match File::open(FILE_PATH) {
+        Ok(f) => f,
+        Err(_) => {
+            // 文件不存在，创建文件
+            let created_file = OpenOptions::new()
+                .write(true)
+                .create(true)
+                .open(FILE_PATH).unwrap();
+            created_file
+        }
+    };
+
+    // 读取文件内容
+    let mut content = String::new();
+    file.read_to_string(&mut content).unwrap();
+    return content;
+}
+
+#[tauri::command]
+fn write_server(json_string: String) -> String {
+    let mut content: String = "".to_string();
+    match File::create(FILE_PATH) {
+        Ok(mut f) => match f.write_all(json_string.as_bytes()) {
+            Ok(_) => {}
+            Err(_) => {
+                content ="写入失败".to_string();
+            }
+        },
+        Err(_) => {
+            content ="写入失败".to_string();
         }
     }
     return content;
