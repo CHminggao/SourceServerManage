@@ -1,10 +1,10 @@
 {
-    "version": "v0.3.1",
-    "notes": "",
+    "version": "v0.4.0",
+    "notes": "加入游戏过程优化",
     "pub_date": "2024-02-05T19:25:57Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ0d5dkVLb0NlQVlWNlNWRjBIa2VacVRreXFSMXN6d3FoT2FSWXB3a2wvSDNZcW4rNVJ6UFMzZE5XdnQ3eXcxNzRkMytmTnpXTkVpSlRFOWNrUTB3ekFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA3MTMyNzQ3CWZpbGU6c291cmNlc2VydmVyXzAuMy4xX3g2NC1zZXR1cC5uc2lzLnppcApiUGxpZnd6SWdEQW91Y3pBN2FLaGg0UEpaUGlJV3c1VU5nL25yL1pWYjcyTmxqQUo4S3ZNSUE1TklsZFFTNnllbUE3a2hMZVJRQ0dXY1piMUFhS0dCUT09Cg==",
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ0ZKVVYxem1QaHRmQzFZSlhLdnlRWmUrRmVsa25SbENHRmUvQ0tOay8rSjJXK3dJZHFIcE5TS29LV216MExLcEVoT0x1a2VMVHJhdERlMTViU040T1E0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA3MTkwMzcxCWZpbGU6c291cmNlc2VydmVyXzAuNC4wX3g2NC1zZXR1cC5uc2lzLnppcAppcnVwd1VuaGhFYy9xWjZ6ZURxSTBqdk5NUUdEcGFDTUQvK2l3aEcwTVBZUFlxbEFkcjZVOFlsNG9Bb3ltbTc0WmhtOGZoMnVPL2xjY1IzVXhCQ1ZDZz09Cg==",
         "url": "https://g.gmonster.win/https/github.com/CHminggao/SourceServerManage/releases/latest/download/sourceserver_x64-setup.zip"
       }
     }

@@ -10,6 +10,9 @@ import {
   FormRules
 } from 'naive-ui'
 import { invoke } from '@tauri-apps/api'
+import { open } from '@tauri-apps/api/shell'
+
+
 
 const message = useMessage()
 
@@ -104,7 +107,7 @@ const delServer = (row: ServerInfo) => {
 }
 
 const gotoServer = (com: string) => {
-  invoke('start_game', { server: "steam://connect/" + com }).then(() => { })
+  open("steam://connect/" + com).then(() => { })
 }
 let it = 0
 let warningState = false
