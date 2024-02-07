@@ -199,7 +199,7 @@ const getAllData = () => {
       if (active.value) {
         getAllData()
       }
-    }, 1000);
+    }, 10000);
   })
 }
 
