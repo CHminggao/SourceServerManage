@@ -1,21 +1,23 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-use tauri::Manager;
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::process::Command;
+use tauri::Manager;
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
     args: Vec<String>,
     cwd: String,
-  }
+}
 
 const FILE_PATH: &str = ".config/serverinfo.json";
 const CONFIG_PATH: &str = ".config/config.json";
 fn main() {
     hasfile();
+    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             server_info,
@@ -34,7 +36,7 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct ServerInfo {
     name: String,
     map: String,
@@ -66,36 +68,56 @@ fn start_game(server: String) {
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 fn server_all() -> String {
-    let server_config: Vec<ServerConfig> = read_from_server_file().unwrap();
-    let mut server_info: Vec<ServerInfo> = Vec::new();
-    for value in server_config.iter() {
-        let some_value: ServerConfig = value.clone();
-
-        let client: a2s::A2SClient = a2s::A2SClient::new().unwrap();
-        let result: Result<a2s::info::Info, a2s::errors::Error> =
-            client.info(format!("{}:{}", &some_value.ip, &some_value.port));
-        match result {
-            Ok(info) => {
-                server_info.push(ServerInfo {
-                    name: info.name,
-                    map: info.map,
-                    game: info.game,
-                    players: info.players,
-                    max_players: info.max_players,
-                    ip: some_value.ip.clone(),
-                    port: some_value.port.to_string(),
-                    incount: some_value.incount.to_string(),
-                });
-            }
-            Err(_) => {}
-        }
-    }
-    return serde_json::to_string(&server_info).unwrap();
+    let server = read_from_server_file().unwrap();
+    let server_info: Vec<ServerInfo> = server
+        .par_iter()
+        .map(|x| test_info_async(x.clone()))
+        .collect();
+    let output_array: Vec<ServerInfo> = server_info
+        .par_iter()
+        .filter(|&x| x.name != "".to_string())
+        .cloned()
+        .collect();
+    return serde_json::to_string(&output_array).unwrap();
 }
 
-#[tauri::command]
+fn test_info_async(value: ServerConfig) -> ServerInfo {
+    let some_value: ServerConfig = value.clone();
+
+    let client: a2s::A2SClient = a2s::A2SClient::new().unwrap();
+    let result: Result<a2s::info::Info, a2s::errors::Error> =
+        client.info(format!("{}:{}", &some_value.ip, &some_value.port));
+    let mut server_info: ServerInfo = ServerInfo {
+        name: "".to_string(),
+        map: "".to_string(),
+        game: "".to_string(),
+        players: 0,
+        max_players: 0,
+        ip: value.ip,
+        port: value.port.to_string(),
+        incount: value.incount.to_string(),
+    };
+    match result {
+        Ok(info) => {
+            server_info = ServerInfo {
+                name: info.name,
+                map: info.map,
+                game: info.game,
+                players: info.players,
+                max_players: info.max_players,
+                ip: some_value.ip.clone(),
+                port: some_value.port.to_string(),
+                incount: some_value.incount.to_string(),
+            };
+        }
+        Err(_) => {}
+    }
+    return server_info;
+}
+
+#[tauri::command(async)]
 fn server_info(ip: String, port: String) -> String {
     let client: a2s::A2SClient = a2s::A2SClient::new().unwrap();
     let result: Result<a2s::info::Info, a2s::errors::Error> = client.info(ip.clone() + ":" + &port);
@@ -150,18 +172,18 @@ fn write_config_file(json_string: String) -> String {
         Ok(mut f) => match f.write_all(json_string.as_bytes()) {
             Ok(_) => {}
             Err(_) => {
-                content ="写入失败".to_string();
+                content = "写入失败".to_string();
             }
         },
         Err(_) => {
-            content ="写入失败".to_string();
+            content = "写入失败".to_string();
         }
     }
     return content;
 }
 
 #[tauri::command]
-fn read_server()-> String{
+fn read_server() -> String {
     // 尝试以只读方式打开文件
     let mut file = match File::open(FILE_PATH) {
         Ok(f) => f,
@@ -170,7 +192,8 @@ fn read_server()-> String{
             let created_file = OpenOptions::new()
                 .write(true)
                 .create(true)
-                .open(FILE_PATH).unwrap();
+                .open(FILE_PATH)
+                .unwrap();
             created_file
         }
     };
@@ -188,11 +211,11 @@ fn write_server(json_string: String) -> String {
         Ok(mut f) => match f.write_all(json_string.as_bytes()) {
             Ok(_) => {}
             Err(_) => {
-                content ="写入失败".to_string();
+                content = "写入失败".to_string();
             }
         },
         Err(_) => {
-            content ="写入失败".to_string();
+            content = "写入失败".to_string();
         }
     }
     return content;
@@ -207,7 +230,8 @@ fn read_from_server_file() -> io::Result<Vec<ServerConfig>> {
             let created_file = OpenOptions::new()
                 .write(true)
                 .create(true)
-                .open(FILE_PATH).unwrap();
+                .open(FILE_PATH)
+                .unwrap();
             created_file
         }
     };
@@ -222,7 +246,7 @@ fn read_from_server_file() -> io::Result<Vec<ServerConfig>> {
     Ok(person)
 }
 
-fn hasfile(){
+fn hasfile() {
     // 确保路径存在
     if let Some(parent_dir) = std::path::Path::new(FILE_PATH).parent() {
         fs::create_dir_all(parent_dir).unwrap();

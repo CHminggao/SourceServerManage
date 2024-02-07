@@ -109,10 +109,9 @@ const delServer = (row: ServerInfo) => {
 const gotoServer = (com: string) => {
   open("steam://connect/" + com).then(() => { })
 }
-let it = 0
+
 let warningState = false
 const watingStart = (server: ServerInfo) => {
-  clearInterval(it)
   const { dialog } = createDiscreteApi(
     ['dialog']
   )
@@ -132,14 +131,13 @@ const watingStart = (server: ServerInfo) => {
     maskClosable: false,
     onAfterLeave: () => {
       warningState = false
-      clearInterval(it)
     },
     onPositiveClick: () => {
       gotoServer(server.ip + ":" + server.port)
     }
   })
 
-  it = setInterval(() => {
+  let it = () => {
     invoke('server_info', { ip: server.ip, port: server.port }).then((result) => {
       let s = <ServerInfo>JSON.parse(<string>result)
       time += 1
@@ -147,15 +145,20 @@ const watingStart = (server: ServerInfo) => {
         gotoServer(server.ip + ":" + server.port)
         warning.destroy()
         return
+      } else {
+        warning.content = () => h('div', [
+          h('p', `${server.name}`),
+          h('p', `地图：${server.map}`),
+          h('p', `人数：${s.players}/${s.max_players}`),
+          h('p', `已等待：${Math.floor(time / 60)}:${time % 60}`)
+        ])
+        setTimeout(() => {
+          it()
+        }, 1000);
       }
-      warning.content = () => h('div', [
-        h('p', `${server.name}`),
-        h('p', `地图：${server.map}`),
-        h('p', `人数：${s.players}/${s.max_players}`),
-        h('p', `已等待：${Math.floor(time / 60)}:${time % 60}`)
-      ])
     })
-  }, 1000);
+  }
+  it()
 }
 
 const updateData = (data: ServerInfo[]) => {
@@ -192,6 +195,11 @@ const getAllData = () => {
     updateData(JSON.parse(<string>result))
   }).finally(() => {
     getAllDataLoading.value = false
+    setTimeout(() => {
+      if (active.value) {
+        getAllData()
+      }
+    }, 1000);
   })
 }
 
@@ -222,6 +230,9 @@ let jkDataTemp: ServerInfo[] = []
 const jkRowData = ref(jkDataTemp)
 const jkUpdateEvent = (s: boolean) => {
   if (s) {
+    if (!active.value) {
+      getAllData()
+    }
     active.value = s
   }
 }
@@ -320,16 +331,17 @@ const handleValidateButtonClick = (e: MouseEvent) => {
   })
 }
 
+const handleSelectChange = (value: Boolean) => {
+  if (value) {
+    getAllData()
+  }
+}
+
 onMounted(() => {
   invoke('read_from_config_file').then((_) => {
     configInput.value = JSON.parse(<string>_)
   })
   getAllData()
-  setInterval(() => {
-    if (active.value) {
-      getAllData()
-    }
-  }, 10000)
 })
 </script>
 
@@ -339,10 +351,9 @@ onMounted(() => {
       <div class="button_gp">
         <n-button :loading="getAllDataLoading" size="small" @click="getAllData" type="info">刷新</n-button>
         <span style="margin-left:10px;">自动刷新
-
           <n-tooltip trigger="hover">
             <template #trigger>
-              <n-switch size="small" v-model:value="active" />
+              <n-switch @update:value="handleSelectChange" size="small" v-model:value="active" />
             </template>
             开启后每隔10s自动刷新
           </n-tooltip>
