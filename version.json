@@ -1,10 +1,10 @@
 {
-    "version": "v0.4.2",
-    "notes": "多线程优化，解决刷新时主界面未响应",
-    "pub_date": "2024-02-07T14:00:00Z",
+    "version": "v0.4.3",
+    "notes": "修复bug",
+    "pub_date": "2024-02-17T14:00:00Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ09VQ3hYOGlpMU5JQzNTSDkxS0xDRWFBU0JnVzJjWjVKQlB2bWg5dm8wYkNWR1Q5RTFDR3IzYlBPdWxyQi85ekhBeW05c3dUNXhGMnJaSGwvblJmcWdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA3Mjg1ODIzCWZpbGU6c291cmNlc2VydmVyXzAuNC4yX3g2NC1zZXR1cC5uc2lzLnppcAp1a01PMktYMXhuWnRFNHFiRkdGaGJhRW1Mckl4UXNZaDMvTitTVkRPMS9pMDVUQ1RWVEN0SWlBYytKSXpabGw1SXRWOUtSY2tRcHBlZDBOejZ4TU9Cdz09Cg==",
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ0wxRTliUWRmckcxTGtNclpHOHRoSWU4VlVoUWxkTnUyYVVpWVJqbGdYeXVubVdETXl3TGpFS2hSUEkxTnp1c1dJZ3VzOUxQZ1FRMVBHY21YbndtbFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA4MTUxNjczCWZpbGU6c291cmNlc2VydmVyXzAuNC4zX3g2NC1zZXR1cC5uc2lzLnppcApFamRzUXN2WUg4Ynp0SExRUmhSUlpWNFV1azhmWTFONE05RGZuWHArem9EVlJEc1ZNYjdLbnBrdVJEVDNJVmtnNU9RVnNQd0xCbzZtbUl2TzBEcStCQT09Cg==",
         "url": "https://g.gmonster.win/https/github.com/CHminggao/SourceServerManage/releases/latest/download/sourceserver_x64-setup.zip"
       }
     }

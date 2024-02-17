@@ -115,6 +115,7 @@ const watingStart = (server: ServerInfo) => {
   const { dialog } = createDiscreteApi(
     ['dialog']
   )
+  let watingTm=0
   let time = 0
   warningState = true
   let warning = dialog.warning({
@@ -130,13 +131,14 @@ const watingStart = (server: ServerInfo) => {
     negativeText: '取消',
     maskClosable: false,
     onAfterLeave: () => {
+      clearTimeout(watingTm)
       warningState = false
     },
     onPositiveClick: () => {
       gotoServer(server.ip + ":" + server.port)
     }
   })
-
+  
   let it = () => {
     invoke('server_info', { ip: server.ip, port: server.port }).then((result) => {
       let s = <ServerInfo>JSON.parse(<string>result)
@@ -152,8 +154,9 @@ const watingStart = (server: ServerInfo) => {
           h('p', `人数：${s.players}/${s.max_players}`),
           h('p', `已等待：${Math.floor(time / 60)}:${time % 60}`)
         ])
-        setTimeout(() => {
-          it()
+        watingTm = setTimeout(() => {
+          if(warningState)
+            it()
         }, 1000);
       }
     })
@@ -169,33 +172,31 @@ const updateData = (data: ServerInfo[]) => {
     jkModal.value = true
     if (autoInActive.value && !warningState) {
       if (d.length == 1) {
-        // console.log(1)
         start(d[0])
       } else {
         let nohas = d.filter(z => z.players > z.incount)
         let has = d.filter(z => z.players <= z.incount)
         if (nohas.length > 0 && has.length > 0 && (has[0].players >= 20 || has[0].incount <= 20)) {
           start(has[0])
-          // console.log(2)
         } else if (has.length > 0) {
           start(has[0])
-          // console.log(3)
         } else if (nohas.length > 0) {
           start(nohas[0])
-          // console.log(4)
         }
       }
     }
   }
 }
 
+let allDataTm=0;
 const getAllData = () => {
+  clearTimeout(allDataTm)
   getAllDataLoading.value = true
   invoke('server_all').then((result) => {
     updateData(JSON.parse(<string>result))
   }).finally(() => {
     getAllDataLoading.value = false
-    setTimeout(() => {
+    allDataTm = setTimeout(() => {
       if (active.value) {
         getAllData()
       }
