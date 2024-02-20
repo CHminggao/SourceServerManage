@@ -115,7 +115,7 @@ const watingStart = (server: ServerInfo) => {
   const { dialog } = createDiscreteApi(
     ['dialog']
   )
-  let watingTm=0
+  let watingTm = 0
   let time = 0
   warningState = true
   let warning = dialog.warning({
@@ -138,11 +138,11 @@ const watingStart = (server: ServerInfo) => {
       gotoServer(server.ip + ":" + server.port)
     }
   })
-  
+
   let it = () => {
+    time += 1
     invoke('server_info', { ip: server.ip, port: server.port }).then((result) => {
       let s = <ServerInfo>JSON.parse(<string>result)
-      time += 1
       if (s.players < server.incount) {
         gotoServer(server.ip + ":" + server.port)
         warning.destroy()
@@ -154,11 +154,13 @@ const watingStart = (server: ServerInfo) => {
           h('p', `人数：${s.players}/${s.max_players}`),
           h('p', `已等待：${Math.floor(time / 60)}:${time % 60}`)
         ])
-        watingTm = setTimeout(() => {
-          if(warningState)
-            it()
-        }, 1000);
       }
+    }).finally(() => {
+      time += 1
+      watingTm = setTimeout(() => {
+        if (warningState)
+          it()
+      }, 1000);
     })
   }
   it()
@@ -188,14 +190,16 @@ const updateData = (data: ServerInfo[]) => {
   }
 }
 
-let allDataTm=0;
+let allDataTm = 0;
 const getAllData = () => {
   clearTimeout(allDataTm)
   getAllDataLoading.value = true
   invoke('server_all').then((result) => {
     updateData(JSON.parse(<string>result))
   }).finally(() => {
-    getAllDataLoading.value = false
+    if(!active.value){
+      getAllDataLoading.value = false
+    }
     allDataTm = setTimeout(() => {
       if (active.value) {
         getAllData()

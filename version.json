@@ -1,10 +1,10 @@
 {
-    "version": "v0.4.3",
+    "version": "v0.4.4",
     "notes": "修复bug",
-    "pub_date": "2024-02-17T14:00:00Z",
+    "pub_date": "2024-02-21T14:00:00Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ0wxRTliUWRmckcxTGtNclpHOHRoSWU4VlVoUWxkTnUyYVVpWVJqbGdYeXVubVdETXl3TGpFS2hSUEkxTnp1c1dJZ3VzOUxQZ1FRMVBHY21YbndtbFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA4MTUxNjczCWZpbGU6c291cmNlc2VydmVyXzAuNC4zX3g2NC1zZXR1cC5uc2lzLnppcApFamRzUXN2WUg4Ynp0SExRUmhSUlpWNFV1azhmWTFONE05RGZuWHArem9EVlJEc1ZNYjdLbnBrdVJEVDNJVmtnNU9RVnNQd0xCbzZtbUl2TzBEcStCQT09Cg==",
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTRmp4Z1lIU3JQQ0ZVdnptQ0NoS29PRy9oeUYyZ3BDS0h1bEt4TWhQdjdTMXJCRFp4ZndpT3crZmdiV3JobW1MNllVWFFmZDBhSnFKbmdDdEhYUnh5Z21sNXpJRVNyc2dNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA4NDcxMzYwCWZpbGU6c291cmNlc2VydmVyXzAuNC40X3g2NC1zZXR1cC5uc2lzLnppcApzb0UrMVFWcHI2ZUtRRDBwRXgwZlVpWnJlQVRqek1hNmhFdmJpcUFkT2lDRGpRejZyc1hSRmFzZ1ZwK0RzNmlBY2FWeWtrWTRTMGhrK2JJS2FlRVRDdz09Cg==",
         "url": "https://g.gmonster.win/https/github.com/CHminggao/SourceServerManage/releases/latest/download/sourceserver_x64-setup.zip"
       }
     }
